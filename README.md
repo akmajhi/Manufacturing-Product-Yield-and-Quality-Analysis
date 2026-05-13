@@ -1,212 +1,233 @@
-# Manufacturing Product Yield & Quality Analysis
+# 🏭 Manufacturing Product Yield & Quality Analysis
 
-**An end-to-end manufacturing analytics project built on a custom synthetic multi-table dataset — from data design and SQL modeling to a 3-page operational dashboard in Tableau.**
+<div align="center">
 
----
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Tableau](https://img.shields.io/badge/Tableau-E97627?style=for-the-badge&logo=tableau&logoColor=white)
+![pgAdmin](https://img.shields.io/badge/pgAdmin-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+![SQL](https://img.shields.io/badge/SQL-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
 
-## Project Overview
+**A manufacturing analytics project built on a synthetic multi-table dataset — from data design and SQL modeling to a 3-page Tableau dashboard.**
 
-This project was built to simulate a realistic manufacturing environment and demonstrate how raw operational data can be transformed into business-ready insights.
-
-The core idea behind the project is that production quality is never driven by one variable alone. Yield loss can result from machine instability, maintenance delays, sensor drift, environmental variation, operator differences, process conditions, and product complexity. Instead of using a clean and unrealistic dataset, this project was intentionally designed to behave like a real industrial system.
-
-To achieve that, I designed a synthetic manufacturing dataset from scratch, structured it like a production-grade operational database, processed it through PostgreSQL, and built a Tableau dashboard system focused on answering practical manufacturing questions.
-
-The final result is not just a visualization project. It is a complete operational analytics workflow that demonstrates:
-
-- SQL-based analytical modeling
-- manufacturing KPI engineering
-- operational problem-solving
-- dashboard storytelling
-- industrial business logic
-- data-cleaning strategy
-- production-quality reporting workflows
+</div>
 
 ---
 
-## Why I Built This Project
+## 📌 Table of Contents
 
-My background in instrumentation and industrial systems strongly influenced the way this project was designed.
-
-In manufacturing environments, the real challenge is rarely just measuring a number. The actual challenge is understanding:
-
-- why the number changed
-- what operational factor caused the change
-- whether the issue is machine-related, process-related, or human-related
-- how the business should respond to it
-
-That mindset shaped the structure of this project.
-
-I wanted to create an analytics workflow that reflects how operational analysis is performed in real production environments:
-
-- identify the business problem
-- structure the raw data correctly
-- create meaningful operational KPIs
-- validate patterns through analysis
-- build dashboards that support decision-making instead of only visualization
-
-This project combines industrial domain understanding with analytics and business intelligence to create a realistic manufacturing quality analysis system.
+- [What is this project about](#-what-is-this-project-about)
+- [Why I built this](#-why-i-built-this)
+- [Dashboards](#-dashboards)
+- [Dataset design](#-dataset-design)
+- [Database structure](#-how-the-database-is-structured)
+- [SQL pipeline](#-how-the-sql-pipeline-works)
+- [Repository structure](#-repository-structure)
+- [Key findings](#-key-findings)
+- [What I learned](#-what-i-learned)
+- [Tools used](#-tools-used)
+- [Author](#-author)
 
 ---
 
-## Business Questions Behind the Dashboard
+## 🔍 What is this project about?
 
-The dashboard system is organized around three operational questions.
+This project looks at one simple thing: **why does quality go down in a factory, and what is actually causing it?**
 
-### Dashboard 1 — Company Production Health
+In real production work, the answer is usually not one thing. A run can go wrong because a machine is acting up, maintenance happened too late, the process is drifting, the people on the line are doing things differently, or the product itself is harder to make right.
 
-**Business Question:**
-
-> Is the factory operating efficiently, and where is quality loss happening at the business level?
-
-This dashboard provides an executive-level overview of production health using KPIs such as yield percentage, production volume, defect concentration, throughput efficiency, and environmental risk.
+I wanted to build a project that feels like that kind of real work. So I designed a synthetic manufacturing dataset from scratch, shaped it like a real factory system, cleaned it in PostgreSQL, and turned it into Tableau dashboards that answer practical business questions.
 
 ---
 
-### Dashboard 2 — Machine & Sensor Health
+## 💡 Why I Built This
 
-**Business Question:**
+I wanted to build something that shows **how I think**, not just what tools I know.
 
-> Does maintenance improve reliability, and do sensor patterns reveal early signs of failure?
+In manufacturing, the real question is never only *"What is the number?"* The real question is:
 
-This dashboard focuses on machine reliability, maintenance impact, sensor instability, downtime behavior, and pre-defect operational patterns.
+- ❓ Why did it change?
+- ❓ What caused it?
+- ❓ Is it a machine issue, a process issue, or a people issue?
+- ❓ What should the business do next?
 
-The analysis is designed around operational logic commonly used in instrumentation and reliability engineering.
-
----
-
-### Dashboard 3 — Human Factors
-
-**Business Question:**
-
-> Do operator experience, certifications, shift patterns, and inspector behavior influence production quality?
-
-This dashboard studies workforce-related variation and evaluates whether human operational factors measurably affect quality performance.
+That way of thinking shaped the whole project. I wanted the workflow to feel like real operational analysis — start with a business problem, structure the data properly, create useful KPIs, check the patterns carefully, and turn the result into something a manager can actually use.
 
 ---
 
-## Dataset Design Philosophy
+## 📊 Dashboards
 
-The dataset used in this project is synthetic, but it was intentionally designed using realistic manufacturing logic instead of random value generation.
+### Page 1 — Company Production Health
 
-The goal was to simulate how industrial systems actually behave under operational conditions.
+![Company Production Health](dashboard/01_dashboard_company_production.png)
 
-To make the analysis realistic, the dataset includes intentionally engineered data-quality challenges such as:
+> This page gives the quick answer a plant manager usually wants: **is the plant doing well, and where is quality loss happening?**
 
-- approximately 30% null rates in selected sensor channels
-- duplicate records caused by clock skew
-- JSON-encoded maintenance and defect fields
-- outlier process behavior
-- sensor drift before failures
-- noisy inspection labels
-- class imbalance in the quality target variable
-- operational variability between machines and operators
+It shows how much good output the plant is making, how often defects are showing up, and whether the process is staying steady or starting to slip. That makes it useful for someone who wants the big picture first, before going deeper.
 
-The relationships between maintenance, machine reliability, environmental conditions, product specifications, and quality outcomes were designed intentionally so the data would behave realistically during:
+The main question here is simple: **is the plant doing fine, or is the process slowly slipping?**
 
-- EDA
-- dashboard analysis
-- KPI reporting
-- statistical testing
-- root-cause analysis
+---
 
-The complete dataset-generation methodology is documented in:
+### Page 2 — Machine & Sensor Health
 
-```text
-/dataset_generation_logic.pdf
+![Machine & Sensor Health](dashboard/02_dashboard_machine_sensor.png)
+
+> This page asks whether **machine condition and maintenance timing** are affecting quality.
+
+It looks at machine reliability, downtime, how long it has been since the last service, and sensor readings that start acting strange before bad output shows up. In plain words, it tries to **catch trouble early.**
+
+This page is useful for maintenance teams, reliability teams, or anyone who wants to know whether the machine is warning us before something goes wrong.
+
+---
+
+### Page 3 — Human Factors
+
+![Human Factors](dashboard/03_dashboard_human_factors.png)
+
+> This page asks whether **the people running the process** are changing the output.
+
+It studies how long people have worked, whether they are trained, which shift they work, and whether inspectors are seeing the same thing in the same way. The idea is to check whether human differences are actually visible in the quality result.
+
+This page is useful for quality teams and managers who want to understand whether the issue is coming from the machine, the process, or the people working on it.
+
+---
+
+## 🗄️ Dataset Design
+
+The dataset is synthetic, but it was **not built randomly**. I designed it using manufacturing logic so it behaves like a real industrial system during analysis.
+
+To make it feel realistic, I added the kind of mess analysts usually see in production data:
+
+| Challenge | Description |
+|---|---|
+| 🔲 Missing values | Some sensor channels have gaps, like real telemetry |
+| 🔁 Duplicate records | Caused by clock skew in logging systems |
+| 📋 Semi-structured fields | JSON-style maintenance and defect fields |
+| 🏷️ Noisy labels | Inspection labels with realistic inconsistency |
+| ⚖️ Uneven quality target | Not every product has the same tolerance |
+| 📡 Sensor drift | Strange patterns appearing before failures |
+| 📈 Outliers | Values that stand out from the usual pattern |
+| ⚙️ Variation across groups | Differences across machines, people, and shifts |
+
+That means the data does **not** behave like a clean demo file. It behaves like a system that needs real analysis.
+
+> 📄 Full generation logic: [`/dataset_generation_logic.pdf`](dataset_generation_logic.pdf)
+>
+> 📄 Table-level data overview: [`/data_overview.pdf`](data_overview.pdf)
+
+---
+
+## 🏗️ How the Database is Structured
+
+The project uses **six linked tables**. Each one represents a different layer of the manufacturing system.
+
+```
+sensor_readings      →  High-frequency machine readings
+production_log       →  Main operational table (one row = one run/batch)
+quality_inspection   →  Final inspection results and defect records
+maintenance_log      →  Preventive and corrective maintenance events
+operators            →  People-related details (experience, training, certifications)
+product_catalog      →  Product family, tolerance limits, and recommended speed
 ```
 
-The statistical profile of all six tables is documented in:
-
-```text
-/data_overview.pdf
-```
-
----
-
-## Database Schema
-
-The project uses six interconnected tables, each representing one operational layer of a manufacturing information system.
-
-### `sensor_readings`
-
-High-frequency machine telemetry used for:
-
-- sensor drift analysis
-- anomaly detection
-- operational stability monitoring
-- pre-defect signal analysis
-
-Contains intentional missingness, outliers, and duplicate records to simulate real telemetry systems.
+| Table | Role |
+|---|---|
+| `sensor_readings` | Studies strange patterns, warning signs, and process stability |
+| `production_log` | Connects machine, person, product, shift, timing, and environment |
+| `quality_inspection` | Holds pass/fail target, defect count, defect type, and severity score |
+| `maintenance_log` | Answers whether maintenance is actually helping |
+| `operators` | Supports the human side of the analysis |
+| `product_catalog` | Explains why some products are naturally harder to make right |
 
 ---
 
-### `production_log`
+## ⚙️ How the SQL Pipeline Works
 
-The central operational table linking:
-
-- machines
-- operators
-- products
-- shifts
-- environmental conditions
-- production timing
-
-One row represents one production batch or production run.
+I did not jump straight into Tableau. I first built the data layer in SQL so the dashboard would sit on a clean base.
 
 ---
 
-### `quality_inspection`
-
-Stores final production inspection results including:
-
-- pass/fail target (`pin_holes`)
-- defect counts
-- defect categories
-- severity scoring
-
-This table acts as the primary quality outcome layer.
+### `01_create_tables.sql`
+Creates all six tables with the right PostgreSQL data types. Sets up the structure first so everything else has a stable base.
 
 ---
 
-### `maintenance_log`
-
-Contains preventive and corrective maintenance events including:
-
-- maintenance timing
-- downtime duration
-- maintenance type
-- replaced parts
-
-Used to analyze maintenance effectiveness and reliability behavior.
+### `02_create_foreign_keys.sql`
+Connects the tables properly after the data is loaded. Keeps the production system linked across machines, people, products, maintenance, and quality.
 
 ---
 
-### `operators`
+### `03_data_cleaning_and_type_corrections.sql`
+Handles the messy parts that would otherwise break the analysis:
 
-Contains workforce-related operational information such as:
+- Removes duplicates
+- Turns JSON-style fields into proper `JSONB`
+- Fixes data types
+- Creates defect and maintenance flags
 
-- experience level
-- certifications
-- training dates
-
-Supports human-factor analysis and operator-level quality evaluation.
-
----
-
-### `product_catalog`
-
-Stores product specifications including:
-
-- product family
-- tolerance limits
-- recommended operating speed
-
-Used to evaluate product-level production sensitivity and process variation.
+In simple words, it turns semi-structured data into something Tableau can work with cleanly.
 
 ---
 
-## Repository Structure
+### `04_feature_engineering.sql`
+Creates the features the analysis actually needs:
+
+| Feature | Description |
+|---|---|
+| `duration_minutes` | How long each run took |
+| `production_date` | Daily join point across tables |
+| `days_since_maint` | How long the machine went without maintenance |
+| `last_maint_type` | Whether the last service was preventive or corrective |
+| `is_outlier` | Marks unusual sensor readings |
+
+---
+
+### `05_view_master_production.sql`
+Builds the **main production-level view**. Brings the major tables together into one dashboard-ready structure and calculates:
+
+- Throughput
+- Production efficiency
+- Speed deviation
+- Plant pressure
+
+This is the main source for the **Company Production Health** and **Human Factors** pages.
+
+---
+
+### `06_view_machine_reliability.sql`
+Builds the **machine summary view**. Holds machine-level measures:
+
+| Metric | Meaning |
+|---|---|
+| `MTBF` | Average time a machine runs before a serious breakdown |
+| `MTTR` | Average time it takes to fix a machine after breakdown |
+| `maintenance_compliance` | Whether maintenance is happening on schedule |
+| `downtime_split` | Breakdown of planned vs. unplanned downtime |
+| `machine_defect_rate` | Defect rate tied to each machine |
+
+This view supports the **Machine & Sensor Health** page.
+
+---
+
+### `07_view_operator_summary.sql`
+Builds the **people summary view**. Shows:
+
+- Defect rate by person
+- Failure severity
+- Production volume
+- Shift mix
+- Operational patterns
+
+This view supports the **Human Factors** analysis.
+
+---
+
+### `08_view_sensor_pre_defect.sql`
+Builds the **sensor view** that compares sensor behavior on defect days and normal days. Helps show whether vibration or temperature starts rising before a failure — the **early-warning** part of the project.
+
+---
+
+## 📁 Repository Structure
 
 ```text
 manufacturing-yield-analysis/
@@ -233,184 +254,78 @@ manufacturing-yield-analysis/
 
 ---
 
-## SQL Pipeline — File by File
+## 📊 Tableau Public Dashboard
 
-### `01_create_tables.sql`
+<div align="center">
 
-Creates all six tables using appropriate PostgreSQL data types. This establishes the core database structure required for the analytical workflow.
+[![Tableau](https://img.shields.io/badge/View%20Live%20Dashboard-Tableau%20Public-E97627?style=for-the-badge&logo=tableau&logoColor=white)](https://public.tableau.com/views/Manfr_YA/Dashboard-A?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 
----
+*Use the Tableau tabs to move between all three dashboards.*
 
-### `02_create_foreign_keys.sql`
-
-Adds foreign key relationships after data loading to preserve referential integrity across production, quality, maintenance, product, and operator tables.
+</div>
 
 ---
 
-### `03_data_cleaning_and_type_corrections.sql`
+## 🔑 Key Findings
 
-Handles critical data-cleaning operations including:
+> **Maintenance timing matters.**
+> Machines with longer gaps since maintenance showed more defects and less stable production.
 
-- duplicate removal
-- JSONB transformation
-- type standardization
-- extraction of defect and maintenance flags
+> **Preventive beats corrective.**
+> Preventive maintenance was generally tied to lower downtime and better consistency.
 
-This step converts semi-structured operational data into Tableau-ready analytical fields.
+> **Sensors warn before failures.**
+> Sensor readings often started acting strange before defect-heavy production periods.
 
----
+> **Operating conditions amplify risk.**
+> Harsh conditions made failures more likely during faster runs.
 
-### `04_feature_engineering.sql`
-
-Creates analytical features required for downstream reporting and KPI analysis.
-
-Key engineered features include:
-
-- `duration_minutes`
-- `production_date`
-- `days_since_maint`
-- `last_maint_type`
-- `is_outlier`
-
-These features support:
-
-- maintenance decay analysis
-- throughput monitoring
-- operational efficiency studies
-- sensor anomaly detection
+> **Experience helps, but machines matter more.**
+> Experience reduced severe defects, but machine condition still had a stronger overall effect.
 
 ---
 
-### `05_view_master_production.sql`
+## 📚 What I Learned
 
-The central analytical view containing one row per production run.
+This project reminded me that analytics is not just about storing data or drawing charts. The real work is **turning messy operational data into something that helps people make decisions.**
 
-This view combines all major operational layers into a single dashboard-ready structure and calculates:
+> A transactional database stores data safely.
+> An analytical system should answer questions clearly.
+> **That difference matters a lot in manufacturing.**
 
-- throughput
-- production speed efficiency
-- environmental risk
-- speed deviation metrics
-
-This is the primary data source for the Company Health and Human Factors dashboards.
+It also showed me how much domain knowledge changes interpretation. Rising vibration is not just a number. In a factory, it can mean a machine is starting to wear out. That is the kind of insight I wanted this project to capture.
 
 ---
 
-### `06_view_machine_reliability.sql`
-
-Machine-level summary view containing:
-
-- MTBF
-- MTTR
-- PM compliance
-- downtime breakdown
-- maintenance performance
-- machine-level defect rates
-
-Used as the primary data source for the Machine & Sensor Health dashboard.
-
----
-
-### `07_view_operator_summary.sql`
-
-Operator-level summary view containing:
-
-- career defect rate
-- average failure severity
-- production volume
-- shift distribution
-- operational deviation metrics
-
-Supports workforce and operator-performance analysis.
-
----
-
-### `08_view_sensor_pre_defect.sql`
-
-Creates a labeled sensor-analysis view that compares sensor behavior between:
-
-- defect days
-- normal production days
-
-This view supports pre-defect signal analysis and early-warning pattern identification for predictive maintenance workflows.
-
----
-
-## Dashboard
-
-The complete dashboard system is published on Tableau Public.
-
-### Tableau Public Dashboard
-
-🔗 https://public.tableau.com/views/Manfr_YA/Dashboard-A?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
-
-Use the Tableau tabs to navigate between all three dashboards.
-
----
-
-### Dashboard 1 — Company Production Health
-
-![Dashboard 1](dashboard/01_dashboard_company_production.png)
-
----
-
-### Dashboard 2 — Machine & Sensor Health
-
-![Dashboard 2](dashboard/02_dashboard_machine_sensor.png)
-
----
-
-### Dashboard 3 — Human Factors
-
-![Dashboard 3](dashboard/03_dashboard_human_factors.png)
-
----
-
-## Key Operational Findings
-
-- Machines with delayed maintenance periods showed higher defect concentration and operational instability.
-- Preventive maintenance correlated with lower downtime and more stable production performance.
-- Sensor vibration and temperature patterns increased before several defect-heavy production periods.
-- Environmental instability amplified defect probability during high-speed production conditions.
-- Operator experience reduced severe defect frequency, but machine condition remained the stronger quality driver overall.
-
----
-
-## Tools & Technologies
+## 🛠️ Tools Used
 
 | Tool | Purpose |
 |---|---|
-| PostgreSQL | Data storage, cleaning, analytical SQL, and view modeling |
-| pgAdmin / DBeaver | Database development and query management |
-| Tableau Desktop | Dashboard design and visualization |
-| Tableau Public | Dashboard publishing and sharing |
+| ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white) **PostgreSQL** | Data storage, cleaning, analytical SQL, and view creation |
+| ![pgAdmin](https://img.shields.io/badge/pgAdmin-336791?style=flat&logo=postgresql&logoColor=white) **pgAdmin / DBeaver** | SQL development and database management |
+| ![Tableau](https://img.shields.io/badge/Tableau-E97627?style=flat&logo=tableau&logoColor=white) **Tableau Desktop** | Dashboard design and visualization |
+| ![Tableau](https://img.shields.io/badge/Tableau_Public-E97627?style=flat&logo=tableau&logoColor=white) **Tableau Public** | Dashboard publishing and sharing |
 
-The workflow is intentionally SQL-first because many manufacturing BI environments rely on SQL-based analytical pipelines before dashboard consumption.
-
----
-
-## What I Learned Building This
-
-This project reinforced the difference between designing systems for transactions and designing systems for analysis.
-
-Transactional databases are optimized for operational integrity. Analytical systems must instead be structured around the business questions they need to answer. That often requires engineered features, aggregations, and reporting layers that improve analytical clarity and performance.
-
-The project also reinforced how strongly domain knowledge affects interpretation.
-
-For example, rising vibration trends are not just numerical patterns in a manufacturing environment. They can indicate bearing wear, instability, or an approaching mechanical failure. Translating those technical signals into understandable business insights is one of the most important parts of operational analytics.
+> The workflow is **SQL-first** because many manufacturing BI setups work that way.
 
 ---
 
-## Author
+## 👤 Author
+
+<div align="center">
 
 ### Adarsh Kumar Majhi
 
-**Instrumentation Engineer | Data Analyst | Industrial Analytics**
+*Analyst focused on operational behavior, manufacturing quality, and SQL-driven business analysis.*
 
-This project reflects my interest in connecting industrial domain knowledge with data analytics to solve operational quality, reliability, and manufacturing performance problems using structured analytical systems.
+[![LinkedIn](https://img.shields.io/badge/Connect%20on%20LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/adarshkmajhi/)
 
-- LinkedIn: https://www.linkedin.com/in/adarshkmajhi/
+</div>
 
 ---
 
-If you work in manufacturing analytics, operational intelligence, industrial IoT, or reliability engineering and want to discuss the type of work represented in this project, feel free to connect.
+<div align="center">
+
+*If you found this project useful or interesting, feel free to ⭐ star the repository.*
+
+</div>
