@@ -258,7 +258,7 @@ manufacturing-yield-analysis/
 
 <div align="center">
 
-[![Tableau](https://img.shields.io/badge/View%20Live%20Dashboard-Tableau%20Public-E97627?style=for-the-badge&logo=tableau&logoColor=white)]((https://public.tableau.com/app/profile/adarsh.kumar.majhi/viz/Manfr_YA/Dashboard-A))
+[![Tableau](https://img.shields.io/badge/View%20Live%20Dashboard-Tableau%20Public-E97627?style=for-the-badge&logo=tableau&logoColor=white)](https://public.tableau.com/app/profile/adarsh.kumar.majhi/viz/Manfr_YA/Dashboard-A)
 
 *Use the Tableau tabs to move between all three dashboards.*
 
